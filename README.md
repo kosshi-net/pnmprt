@@ -23,10 +23,7 @@ Prints with the standard 256 colors.
 Prints with the limited standard 16 colors. 
 
 ## Todo
-The 256 and 16 color modes use a very naive color algorithm, the output could 
-be much better.
-
-PNM support is also bit shoddy. 
+Improve PNM support.
 
 # Build and install
 Requires C99, no dependencies. 

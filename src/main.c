@@ -4,22 +4,22 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <string.h>
+#include <math.h>
 #include "colorlut.h"
 
 uint8_t rgb_to_term(int32_t r, int32_t g, int32_t b, uint32_t n)
 {
-	/* Incredibly dumb brute-force search, and does a very poor job
-	 * of actually finding the closest color. Improve please.
-	 * */
-	
 	uint32_t best = 0;
-	uint32_t best_error = UINT32_MAX;
+	float    best_error = 99999.0f;
 
 	for (uint32_t i = 0; i < n; i++) {
-		int32_t error = 
-			abs(r - (int32_t)color_lut[i][0]) +
-			abs(g - (int32_t)color_lut[i][1]) +
-			abs(b - (int32_t)color_lut[i][2]);
+
+		float dr = fabs(r - (float)color_lut[i][0]);
+		float dg = fabs(g - (float)color_lut[i][1]);
+		float db = fabs(b - (float)color_lut[i][2]);
+
+		float error = sqrtf((dr*dr)+(dg*dg)+(db*db));
+
 		if (error <= best_error) {
 			best_error = error;
 			best = i;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		}
 
 		if(strcmp( argv[i], "--tc") == 0 
-	    || strcmp( argv[i], "--truecolor") == 0 ) {
+		|| strcmp( argv[i], "--truecolor") == 0 ) {
 			mode = TrueColor;
 			continue;
 		}
@@ -126,24 +126,24 @@ int main(int argc, char **argv)
 		}
 
 		if(strcmp( argv[i], "--16") == 0 
-		||  strcmp( argv[i], "--ansi") == 0 ) {
+		|| strcmp( argv[i], "--ansi") == 0 ) {
 		
 			mode = 16;
 			continue;
 		}
 
 		if(strcmp( argv[i], "-v") == 0 
-	    || strcmp( argv[i], "--version") == 0 ) {
+		|| strcmp( argv[i], "--version") == 0 ) {
 			printf("%s 1.0\n", argv[0]);
 			return 0;
 		}
 			
 		if(strcmp( argv[i], "-") == 0 
-	    || strcmp( argv[i], "-i") == 0 ) 
+		|| strcmp( argv[i], "-i") == 0 ) 
 			continue;
 		
 		if(strcmp( argv[i], "-h") == 0 
-	    || strcmp( argv[i], "--help") == 0 ) {
+		|| strcmp( argv[i], "--help") == 0 ) {
 			printf("Usage: %s [OPTION]... [FILE]\n", argv[0]);
 			printf("\n");
 			printf("  With no FILE, or when FILE is -, read standard input.\n");

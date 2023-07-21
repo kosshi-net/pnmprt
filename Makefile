@@ -1,4 +1,4 @@
-CLFAGS = -Wall -O2
+CLFAGS = -lm -Wall -O2
 
 bin=pnmprt
 
@@ -8,6 +8,7 @@ CC = cc
 all: bin/$(bin)
 
 bin/$(bin): src/main.c;
+	mkdir -p bin
 	$(CC) $^ $(CLFAGS) -o $@
 
 .PHONY: clean install uninstall
